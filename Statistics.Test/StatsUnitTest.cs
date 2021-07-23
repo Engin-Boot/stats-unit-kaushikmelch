@@ -7,7 +7,7 @@ namespace Statistics.Test
     public class StatsUnitTest
     {
         [Fact]
-        public void ReportsAverageMinMax()
+        public void ReportsAverageMinMax_TakesListOfNumbers_ReturnsStats()
         {
             float epsilon = 0.001F;
             var statsComputer = new StatsComputer();
@@ -17,6 +17,20 @@ namespace Statistics.Test
 
             Assert.True(Math.Abs(statsComputer.average - 4.525) <= epsilon);
             Assert.True(Math.Abs(statsComputer.max - 8.9) <= epsilon);
+            Assert.True(Math.Abs(statsComputer.min - 1.5) <= epsilon);
+        }
+
+        [Fact]
+        public void ReportsAverageMinMax_TakesListOfNumbersAndNaN_ReturnsStats()
+        {
+            float epsilon = 0.001F;
+            var statsComputer = new StatsComputer();
+
+            var computedStats = statsComputer.CalculateStatistics(
+                new List<float> { 1.5f, float.NaN, 3.2f, 4.3f, float.NaN });
+
+            Assert.True(Math.Abs(statsComputer.average - 3) <= epsilon);
+            Assert.True(Math.Abs(statsComputer.max - 4.3) <= epsilon);
             Assert.True(Math.Abs(statsComputer.min - 1.5) <= epsilon);
         }
 
