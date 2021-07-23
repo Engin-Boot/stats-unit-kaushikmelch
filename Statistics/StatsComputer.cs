@@ -9,26 +9,44 @@ namespace Statistics
         public double min;
         public double max;
 
+        public StatsComputer()
+        {
+            this.average = 0.0;
+            this.max = 0.0;
+            this.min = Double.MaxValue;
+        }
+
         public Stats CalculateStatistics(List<float> numbers)
         {
             Stats Values = new Stats();
             if (numbers.Count == 0)
             {
-                Values.average = Double.NaN;
-                Values.min = Double.NaN;
-                Values.max = Double.NaN;
+                Values = InvalidStats.MakeStatsNan(Values);
+                this.average = float.NaN;
+                this.max = float.NaN;
+                this.min = float.NaN;
                 return Values;
             }
-            this.average = 0.0;
-            this.min = Double.MaxValue;
-            this.max = 0.0;
+            int inputCount = 0;
             for (int i = 0; i < numbers.Count; i++)
             {
-                this.average += numbers[i];
-                this.max = Math.Max(this.max, numbers[i]);
-                this.min = Math.Min(this.min, numbers[i]);
+                if (!float.IsNaN(numbers[i]))
+                {
+                    this.average += numbers[i];
+                    this.max = Math.Max(this.max, numbers[i]);
+                    this.min = Math.Min(this.min, numbers[i]);
+                    inputCount++;
+                }
             }
-            this.average = this.average / numbers.Count;
+            if (inputCount==0)
+            { 
+                Values = InvalidStats.MakeStatsNan(Values);
+                this.average = float.NaN;
+                this.max = float.NaN;
+                this.min = float.NaN;
+                return Values;
+            }
+            this.average = this.average / inputCount;
             Values.average = this.average;
             Values.max = this.max;
             Values.min = this.min;
